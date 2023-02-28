@@ -1,0 +1,156 @@
+Tuples Nedir?
+
+- TypeScript'e has bir veri tipidir.
+- Tuple, türleri bilinen ancak aynı olması gerekmeyen sabit sayıda öğeye sahip bir diziyi ifade etmemize olanak tanır.
+
+//Tuples
+
+//burada önceki derslerdeki gibi sadece string veya sayı alabilecek bir dizi belirttik.
+const user: (string | number)[] = ["cd"]
+
+//burada ise Tuple ile türü yazılan sırada girilmesi gereken bir dizi belirttik.
+let userT: [string, number, boolean]
+userT = ["cd", 113, true]
+//userT = [true, 132, "cd"] //hata.
+//Bu özellikle API uygulamalarında gelen-giden verinin belirli sırada işlenmesi gereken durumlarda işe yaramaktadır.
+
+//
+
+let rgb: [number, number, number] = [255, 123, 112]
+let rgbOpacity: [number, number, number, number] = [255, 123, 112, 0.5]
+
+// Tür tanımlamasında da kullanılabilir.
+
+type User = [number, string] //bu şekilde tanımladığımızda yazılan sırada tanımlanmasını şart koyduk.
+const newUser: User = [1123, "example@outlook.com"] //bu türden bir değişken oluşturduğumuzda bu sırayı izlememiz şart.
+// const newUser2: User = [1123, "example@", true] //hata
+// const newUser3: User = ["1123", 112] //hata
+
+//Ayrıca veriyi sonradan manipüle de edebiliriz.
+newUser[0] = 456
+newUser[1] = "mymail@gmail.com"
+
+// Dikkat edilmesi gereken noktalar var. Bunlardan biri de push metodunun kullanımı.
+//newUser.push(true) //hata
+//aşağıdaki kullanımlar hata vermeyecektir. Fakat yukarıda belirlediğimiz sınırlamalara tam olarak uydukları da söylenemez.
+newUser.push(1)
+newUser.push("newmail@mail.com")
+newUser.push(123, "newmail@mail.com")
+newUser.push("123", 123)
+
+export{}
+
+---
+
+Enums
+
+- Birçok nesne tabanlı dillerde geçerli olan Enum veri tipi artık TypeScript’de de geçerlidir.
+- En basit haliyle birden fazla metin, sayı veri tipini tek bir koleksiyon içerisinde tanımlaya olanak sağlarlar.
+
+//Enums
+
+//kötü kod. ya birisi gelip değerleri değiştirirse?
+/*
+const AISLE = 0
+const MIDDLE = 1
+const WINDOW = 2
+let seatChoice
+
+if (seatChoice === AISLE) {
+    //işlemler işlemleri
+}
+*/
+
+//enum'lar ile,
+//iyi kod.
+/*
+enum seatChoice {
+    AISLE, //(enum member) seatChoice.AISLE = 0
+    MIDDLE, //(enum member) seatChoice.MIDDLE = 1 
+    WINDOW,
+    ECO_AISLE
+}
+
+const hcSeat = seatChoice.AISLE
+const hcSeat2 = seatChoice.ECO_AISLE
+*/
+/*
+//0'dan başlamasın da isteyebiliriz.
+enum seatChoice {
+    AISLE = 10, //(enum member) seatChoice.AISLE = 10
+    MIDDLE, //(enum member) seatChoice.MIDDLE = 11 
+    WINDOW,
+    ECO_AISLE
+}
+
+const hcSeat = seatChoice.AISLE
+const hcSeat2 = seatChoice.ECO_AISLE
+*/
+/*
+//10'dan başlasın ama artık sırasına uymayalım,
+enum seatChoice {
+    AISLE = 10, //(enum member) seatChoice.AISLE = 10
+    MIDDLE = 22, //(enum member) seatChoice.MIDDLE = 22
+    WINDOW, //(enum member) seatChoice.WINDOW = 23
+    ECO_AISLE
+}
+
+const hcSeat = seatChoice.AISLE
+const hcSeat2 = seatChoice.ECO_AISLE
+*/
+
+//Fakat string bir değer atamak istediğimizde tüm elemanlara değer vermek zorundayız. 
+//Çünkü string ifadelerde sayılardaki gibi otomatik artış belirleyemiyor.
+
+enum seatChoice {
+    AISLE = "koridor", //(enum member) seatChoice.AISLE = 10
+    MIDDLE = "orta", //(enum member) seatChoice.MIDDLE = 22
+    WINDOW = "camKenari", //(enum member) seatChoice.WINDOW = 23
+    ECO_AISLE = "ekonomikKoridor",
+    ECO_MIDDLE = 0, //tekrar sayı da verebiliriz. Otomatik artış devam edecektir.
+    ECO_WIND0W // (enum member) seatChoice.ECO_WIND0W = 1
+}
+
+const hcSeat = seatChoice.AISLE
+const hcSeat2 = seatChoice.ECO_AISLE
+
+Aynı koda JS'de tsc uyguladığımızda;
+
+"use strict";
+var seatChoice;
+(function (seatChoice) {
+    seatChoice["AISLE"] = "koridor";
+    seatChoice["MIDDLE"] = "orta";
+    seatChoice["WINDOW"] = "camKenari";
+    seatChoice["ECO_AISLE"] = "ekonomikKoridor";
+    seatChoice[seatChoice["ECO_MIDDLE"] = 0] = "ECO_MIDDLE";
+    seatChoice[seatChoice["ECO_WIND0W"] = 1] = "ECO_WIND0W"; // (enum member) seatChoice.ECO_WIND0W = 1
+})(seatChoice || (seatChoice = {}));
+const hcSeat = seatChoice.AISLE;
+const hcSeat2 = seatChoice.ECO_AISLE;
+
+// İşlerin uzadığını görürüz.
+
+//bunun bir çözümü enum'un başına bir const getirmek. (https://ultimatecourses.com/blog/const-enums-typescript)
+
+- const enum kullanmak kodu o an için virtual hale getirir ve hakiki kod satırında compile edilmez. Bu daha az kod satırı anlamına gelmektedir.
+
+const enum seatChoice {
+    AISLE = "koridor", //(enum member) seatChoice.AISLE = 10
+    MIDDLE = "orta", //(enum member) seatChoice.MIDDLE = 22
+    WINDOW = "camKenari", //(enum member) seatChoice.WINDOW = 23
+    ECO_AISLE = "ekonomikKoridor",
+    ECO_MIDDLE = 0, //tekrar sayı da verebiliriz. Otomatik artış devam edecektir.
+    ECO_WIND0W // (enum member) seatChoice.ECO_WIND0W = 1
+}
+
+const hcSeat = seatChoice.AISLE
+const hcSeat2 = seatChoice.ECO_AISLE
+
+// JS'de karşılığı;
+
+"use strict";
+const hcSeat = "koridor" /* seatChoice.AISLE */;
+const hcSeat2 = "ekonomikKoridor" /* seatChoice.ECO_AISLE */;
+
+// Görüldüğü üzere kodumuz baya baya azaldı.

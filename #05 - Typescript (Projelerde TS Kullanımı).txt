@@ -1,0 +1,45 @@
+Typescript'de Proje Oluşturma
+
+1-)terminal'de tsc --init yazıp tsconfig.json dosyamızı oluşturuyoruz.
+
+2-)npm --init -y ile package.json'u,
+
+3-)index.html'i oluşturalım.
+
+4-)mkdir src dist yazarak src vs dist adında 2 dizin oluşturalım. (mkdir make directory)
+
+5-)src yani source kodumuzu yazdığımız yerdir. Angular ya da React tüm projelerde yaygın bir standarttır.
+dist ise son kullanıcıya sunulan kısımdır. (dist - distribute)
+
+6-)src dosyamıza sağ tıklayarak index.ts yani Typescript kodlarımızı yazacağımız .ts file'ı oluşturalım.
+dist'de ise, otomatik olarak oluşturulacaktır ama manuel olarak da index.js dosyamızı oluşturabiliriz.
+
+7-)index.html'de body kısmına <script src="./dist/index.js"></script> yazıyoruz. Fakat dikkat edilmesi gereken nokta;
+bu index.js dosyasına bir şey yazılmayacağıdır. Bu dosya index.ts'den generate edilmelidir.
+
+8-)Bu işlemin yapılabilmesi için tsconfig.json'a gidip,
+// "outDir": "./", 'i bulup yorum satırından çıkarıyoruz.
+"outDir": "./dist", 
+olarak düzenliyoruz.
+
+Böylece tsconfig neredeyse o directory tamamen taranacak ve .ts dosyasının aynı isimde .js dosyası oluşturulacaktır. (manuel yapılmadıysa)
+
+.ts dosyamıza;
+
+console.log("typescript rulezzz");
+
+yazdıktan sonra tsc -w ile watch mode'da compile edersek;
+
+index.js'de;
+
+"use strict";
+console.log("typescript rulezzz");
+
+olarak dönüştürüldüğünü görürüz.
+
+Buradan sonra index.html'e sağ tıklayıp Live Server ile console yardımıyla sonuçları görebiliriz.
+
+---
+
+Bu noktadan sonra oluşturduğumuz dosyalar üzerinden devam edeceğiz.
+

@@ -1,0 +1,381 @@
+Functions - Fonksiyonlar
+
+function addTwo(num) {
+    num.toUppercase() //yazabilirim. ve tsc ile js dosyasına aktardığımızda hatasız bir şekilde aktarır.
+    return num + 2
+}
+
+addTwo(5) //addTwo("5") 'te çalışır.
+//addTwo'nun üzerine geldiğimizde  de function addTwo(num: any): any yazdığını görürüz.
+//İstenen bir durum değil.
+export{}
+
+Çözümü oldukça basit;
+
+function addTwo(num: number) { //bu fonksiyon input olarak number alacak!
+    //num.toUppercase() // Hata!
+    return num + 2
+}
+
+addTwo(5) //addTwo("5") Hata!
+//addTwo'nun üzerine geldiğimizde de function addTwo(num: number): number yazdığını görürüz.
+//İstenen bir durum!
+export{}
+
+//string'ler ile çalışalım.
+
+function getUpper(val) { //Parameter 'val' implicitly has an 'any' type, but a better type may be inferred from usage.ts(7044)
+
+    return val.toUppercase()
+}
+
+getUpper(4) //yine hatasız çalıştı. Ama ideal bir durum değil.
+
+//Düzeltelim;
+
+function getUpper(val:string) { //Parameter 'val' implicitly has an 'any' type, but a better type may be inferred from usage.ts(7044)
+    return val.toUpperCase()
+}
+
+//getUpper(4) //Hata!
+getUpper("cagatay")
+getUpper("4")
+
+
+//Örneği genişletelim;
+
+function signUpUser(name: string, email:string, isPaid: boolean){
+
+}
+
+signUpUser(1,2,3) //aslında üç parametre de hatalı girildi. Fakat kodumuzda sadece 1'in altı çizili olduğunu görürüz.
+//bunun sebebi tek seferde bir hata vermesidir. Hata çözüldükten sonra diğer hatalara geçecektir. 1 yerine string yazdığımızda 2'nin
+//2'nin hatasını düzelttiğimizde 3'ün hatası gelecektir.
+
+//Doğrusu;
+
+function signUpUser(name: string, email:string, isPaid: boolean){
+
+}
+
+signUpUser("cagatay", "cagatay@gmail.com" , true) 
+
+
+// Arrow Function'lar ile kullanalım.
+
+//let loginUser = (name: string, email: string, isPaid: boolean) => {}
+//loginUser("cagatay", "cagatay@gmail.com") // An argument for 'isPaid' was not provided. hatası alınır.
+
+//Default bir değer verilmeli.
+let loginUser = (name: string, email: string, isPaid: boolean = false) => {}
+loginUser("cagatay", "cagatay@gmail.com")
+
+//artık default olarak isPaid'e false verilecektir.
+
+export{}
+
+//JS'de karşılığı da;
+var loginUser = function (name, email, isPaid) {
+    if (isPaid === void 0) { isPaid = false; }
+};
+loginUser("cagatay", "cagatay@gmail.com");
+
+olacaktır.
+
+
+//Return'u daha etkili kullanmak gerekli. Fonksiyonları return ederken de tip güvenli hale getirebiliriz.
+
+function addTwoWrong(num: number) {
+    return "hello"
+}
+//hata yok ama mantıksız. Yapmamamız gerekliydi sanki.
+
+//Düzeltelim,
+
+function addTwo(num: number):number {
+    //return "hello" hata
+    return num + 5
+}
+
+//Peki ya birden fazla tipte değer return edebilecek bir metot var.
+/*
+function getValue(myVal: number):string {
+    if(myVal > 5) {
+        return true //burası hata verecek.
+    }   
+    return "200 OK" //:string yerine boolean yazsaydık da burası hata verecekti.
+}
+//İleride daha detaylı anlatılacaktır.
+*/
+
+//Arrow Function ile bir örnek;
+
+const getHello = (s: string): string => {
+    return ""
+}
+
+//Array'ler ile bir örnek verelim;
+
+const heroes = ["Lucifer Morningstar", "Mr.Manhattan", "Batman"]
+
+heroes.map(hero => { //hero: string olduğunu görürüz. Çünkü yukarıdaki Array string'lerden oluşan bir array.
+    return `hero is ${hero}`
+})
+
+const heroes2 = [1, 2, 3]
+heroes2.map(hero => { //hero: number olduğunu görürüz. Çünkü heroes2 array'i number'lerden oluşan bir array.
+    return `hero is ${hero}`
+})
+/*
+//yani burada,
+heroes.map(hero: string => { //ya da heroes2 için number.
+    return `hero is ${hero}`
+})
+//yazmamıza gerek yok. Typescript parametreleri ve işlem yapılan array'in içindeki elemanların türlerini anlar.
+*/
+
+//peki return işin içine girerse;
+
+const heroes4 = ["Lucifer Morningstar", "Mr.Manhattan", "Batman"]
+
+heroes4.map((hero): string => { //burada return edilecek değerin string olacağını garanti altına almış olduk.
+    return `hero is ${hero}`
+})
+//bu daha tercih edilir bir syntax'dir.
+
+//Örnekleri genişletelim;
+//Void Kullanımı
+function consoleError(errMsg: string) { //consoleError'un üzerinde gelirsek, function consoleError(errMsg: string): void yazdığını görürüz.
+    console.log(errMsg)
+}
+//Fakat manuel olarak bunu belirtmek daha iyi bir syntax tercihi olacaktır.
+
+function consoleErrorBetter(errMsg: string):void {  
+    console.log(errMsg)
+    //return 1 //hata verir. //çünkü void yazarak bu fonksiyonun bir değer döndürmeyeceğini garanti altına almış olduk.
+}
+
+//Örnekleri genişletelim;
+//Never Kullanımı:
+//Sadece typescript’e has bir veri tipidir. Herhangi bir değer dönmeyecek veya hataya düşme olasılıkları olan geri dönüşler için kullanılır.
+
+function handleError (errMsg: string):never {
+    throw new Error(errMsg)
+}
+
+//Void - Never Farkı
+//Void tanımsız (undefined) veya boş (null) bir değerde olabilir. Never benzer herhangi bir değer alamaz.
+//Detaylar: https://www.kemalsahin.com/docs/typescript-egitimi/
+//İleride bir detayı daha gösterilecek.
+
+---
+
+Functions with Objects - Object(Nesne-Obje)'ler ile Fonksiyon Kullanımı
+
+//basit bir Object tanımlama.
+const user = {
+    name: "cagatay",
+    email: "cagatay@email.com",
+    isActive: true
+}
+
+//Object'leri genelde fonksiyonlara veri gönderirken ya da fonksiyonlardan return ederken sıklıkla kullanırız.
+
+function createUser({name: string, isPaid: boolean}) { 
+    //input olarak object alan bir fonksiyon.
+}
+//createUser() //bu şekilde çağırırsak hata verir.
+createUser({name: "cagatay", isPaid: false}) //Doğru yazım.
+
+//createUser({name: "cagatay", isPaid: false, email:"c@email.com"})
+//Eğer ki fonksiyon tanımından daha fazla property'i input olarak göndermek istersek hata alırız.
+//bunu çözmek için;
+let newUser = {name: "cagatay", isPaid: false, email: "c@email.com"} //şeklinde ekstra property'li bir Object oluşturup,
+createUser(newUser) //fonksiyona yollayarak yazabiliriz.
+//bu bize anlık bir çözüm getirir. Fakat ileride daha iyi çözüm yollarını göreceğiz.
+
+//Fonksiyonun bir Object return etmesini istersek;
+
+function createCourse(): {name: string, price: number} { //daima name ve price property'lerine sahip bir object dön demiş olduk.
+    return {name: "Typescript", price: 399}
+}
+//bu şekilde yazmamız gerekli.
+
+---
+
+Type Aliases
+
+//Type Alias mevcut veri tipleri yerine takma adlar oluşturmamızı sağlar. Bir veri türü için takma ad belirlediğimizde program boyunca o veri türünü kullanmak yerine oluşturduğumuz takma adı kullanabiliriz.
+
+type User = {
+    name: string;
+    email: string;
+    isActive: boolean
+}
+
+function createUserTA(user: User): User { //User tipinde parametre alıp User tipinde return edecek bir fonksiyon.
+    return {name: "", email: "", isActive: true}
+}
+
+createUserTA({name: "", email: "", isActive: true})
+
+Örnek:
+
+// Documentation'dan Örnek;
+
+type Point = {
+    x: number;
+    y: number;
+};
+
+function printCoord(pt: Point) {
+    console.log("X koordinatları:" + pt.x)
+    console.log("Y koordinatları:" + pt.y)
+}
+
+printCoord({ x: 100, y: 100 })
+
+----
+
+Arrays
+
+const justaAnArray = [] //const justaAnArray: never[] olarak oluşturdu.
+const superHeroesEmpty: [] = [] //daima boş bir array olsun. (sebebi neydi ki :)
+
+const superHeroes: string[] = [] //superHeroes daima bir string array'i tipinde olsun.
+const heroPowerLevel: number[] = [] //heroPowerLevel daima bir number array'i tipinde olsun.
+
+//justaAnArray.push("spiderman") //never olduğu için herhangi bir push işlemi yapılamaz.
+//superHeroesEmpty.push("spiderman") //hata çünkü boş bir array olsun istemiştik.
+
+superHeroes.push("spiderman")
+//heroPowerLevel.push("10") //string veremeyiz. number olarak belirttik.
+heroPowerLevel.push(10)
+
+//Bir başka Array tanımlama şekli daha vardır.
+
+const heroArrayN: Array<number> = []
+const heroArrayS: Array<string> = []
+//ile de aynı işlemi gerçekleştirebiliriz.
+
+//daha da ilerlersek;
+
+type User = {
+    name: string
+    isActive: boolean
+}
+
+// Type Alias'lar konusunda gördüğümüz gibi custom olarak oluşturduğumuz bir türü de array türü olarak belirleyebiliriz.
+const allUsers: User[] = []
+
+//allUsers.push("") //Argument of type 'string' is not assignable to parameter of type 'User'.ts(2345)
+//Çünkü User tipini içerisine name ve isActive adında iki property alan bir object olarak customize etmiştik.
+allUsers.push({name: "", isActive: true}) //bu şekilde doğrusunu yazmış oluruz.
+
+//---
+
+//Multidimentional- Çok boyutlu Array'ler de tanımlayabiliriz.
+
+const MLModels: number[][] = [
+    [255, 255, 255],
+    [3],
+    [123]
+]
+
+---
+
+Union İşlemleri
+
+// Union işlemleri eğer ki gelen verinin türünden emin değilsek (sayı olabilir, string olabilir, hatta ikisi de olabilir) any kullanmak yerine
+// kullandığımız işlemlerdir.
+
+let score: number | string = 33 //score değişkeni sayı ya da string olabilir demiş olduk.
+
+score = "cagatay"
+score = 44
+score = "55"
+
+//Örnek;
+
+type User = {
+    name: string
+    id: number
+}
+
+type Admin = {
+    username: string
+    id: number
+}
+
+let cagatay: User | Admin = { //cagatay adlı değişkenin türü User ya da Admin türünde olabilir dedik.
+    name: "cagatay", //burada User'ı esas alarak property'lerini doldurduk.
+    id: 334
+}
+
+//daha sonra ise Admin'i esas alarak veriyi manipüle edebiliriz.
+cagatay = { username: "ahmet", id: 44} 
+
+// Fonksiyonlara da uygulanabilir.
+/*
+function getDbId(id: number | string) { //id parametresi number ya da string olabilen bir fonksiyon tanımladık.
+    console.log(`Db id is: ${id}`);
+}
+
+getDbId(3) //3 sayısı da gönderebiliriz.
+getDbId("3") //"3" string'i de.
+*/
+
+// Fakat parametre üzerindeki işlemlerde string veya integer'a ait metotları kullanmaya çalışırsak hata alırız.
+/*
+function getDbId(id: number | string) { 
+    id.toLowerCase() //id sayı ya da string olabilir dememize rağmen hata aldık.
+}
+*/
+//hatanın içeriğine bakarsak: Property 'toLowerCase' does not exist on type 'string | number'.
+//Property 'toLowerCase' does not exist on type 'number'.
+
+//Bunu çözmek için;
+function getDbId(id: number | string) { 
+    if (typeof id === "string") { //if yapısı ile string olma durumunu garanti alarak çözebiliriz.
+        id.toLowerCase()
+    }
+    //geri kalan olsalılıklar zaten if'in dışında kaldı.
+}
+
+// Array'ler ile kullanımı;
+
+//const data: number[] = [1, 2, 3, "4"] //olmaz.
+//const data: string[] = ["1", "2", "3", 4] //ooolmaaz.
+
+const data: number [] = [1, 2, 3]
+const data2: string[] =["1", "2", "3"]
+//const data3: string | number [] = ["1", "2", "3"] //classic rookie mistake - çömez hatası.
+//const data3: string[] | number [] = ["1", "2", 3] //e yine olmadı. Çünkü burada ya tamamı string ya da tamamı sayıdan oluşan Array'ler kullan dedik.
+
+const data3: (string | number)[] = ["1", "2", 3] //sonunda burada içerisinde string veya number elemanlar olmasına izin verilen bir Array tanımlayabildik.
+
+const data4: (string | number | boolean)[] = ["1", "2", 3, true] //yapılabiliyor yani. Pek bir amacı yok.
+const data4any: any[] = ["1", "2", 3, true] 
+//yukarıdaki ile aynı işlemi yaptık. Fakat Typescript'in tüm olayı zaten kodumuzu daha mutlak-kuralcı yapmak.
+//o yüzden any'i pek kullanmamak lazım.
+
+//-
+
+// Değişkenlere değer atarken de aynı mantığı kullanabiliriz.
+
+// Diyelim ki elimizde sadece atanan sayıda kalmasını istediğimiz bir değişkenimiz var.
+
+let pi: 3.14 = 3.14
+//pi = 3.145 hata.
+//bu şekilde de pi sadece 3.14 olsun diyebiliriz. Fakat bu pek yararlı bir kullanım olmadı.
+
+// Daha yararlı bir kullanım;
+// Diyelim ki bir uçakta yer ayırtma ekranındayız,
+
+let seatAllotment: "cam kenarı" | "orta" | "koridor"
+
+seatAllotment = "orta"
+// seatAllotment = "yerde" //sadece yukarıda belirlenen üç değeri alabilir. yerde oturamazsın!
+
+
+export {}
